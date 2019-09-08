@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car details</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#header").load("/header.html");
+        });
+    </script>
+</head>
+<body>
+
+<header id="header" class="navbar navbar-expand-lg navbar-light bg-light"></header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="span" th:text="${car.desc}" id="description">
+                Car description
+            </div>
+            <div class="span" id="car-info">
+                <table border="0" id="car-details">
+                    <tr><th>Car make:</th><td th:text="${car.model.make.name}"> Audi </td></tr>
+                    <tr><th>Car model:</th><td th:text="${car.model.name}"> R8 </td></tr>
+                    <tr><th>Body syle:</th><td th:text="${car.model.body.style}"> 2-doors, coupé </td></tr>
+                    <tr><th>Engine type:</th><td th:text="${car.model.engine.type}"> Gasoline </td></tr>
+                    <tr><th>Transmission:</th><td th:text="${car.model.transmission.type}"> AWD </td></tr>
+                    <tr><th>Gearbox:</th><td th:text="${car.gearbox.type}"> automatic </td></tr>
+                    <tr><th>Odometer:</th><td th:text="${car.odometer}"> 100000 </td></tr>
+                    <tr><th>Color:</th><td th:text="${car.color}"> Blue </td></tr>
+                    <tr><th>Status:</th><td th:text="${car.sold} ? 'SOLD' : 'For sale'"> For sale </td></tr>
+                    <tr><th>Price:</th><td th:text="${car.price}"> 230000 </td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm">
+            Owner:
+            <div class="span" id="user-info">
+                <table border="0" id="user-details" th:object="${car.owner}">
+                    <tr><th>Name:</th><td th:text="*{firstname + ' ' + lastname}"> Stepan Khmelnoy </td></tr>
+                    <tr><th>E-mail:</th><td th:text="*{email}"> some@email.com </td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="span" id="photo"></div>
+</div>
+</body>
+</html>

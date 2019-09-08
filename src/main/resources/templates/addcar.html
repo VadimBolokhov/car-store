@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a car</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+
+    $(function() {
+        addElements("makes", appendMakes);
+        addElements("gearboxes", appendGears);
+        addElements("colors", appendColors);
+    });
+
+    function addElements(data, success) {
+        $.ajax({
+            url: "/cars/parts/" + data,
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                success(response);
+            }
+        });
+    }
+
+    function appendMakes(makes) {
+        makes.forEach(function(make) {
+            $("#make").append(
+                "<option value=" + make.id + ">" + make.name + "</option>"
+            );
+        });
+    }
+
+    function appendGears(gears) {
+        gears.forEach(function (gear) {
+            $("#gearbox").append(
+                "<option value=" + gear.id + ">" + gear.type + "</option>"
+            );
+        });
+    }
+
+    function appendColors(colors) {
+        colors.forEach(function(color) {
+            $("#color-select").append(
+                "<option value=" + color + ">" + color + "</option>"
+            );
+        });
+    }
+
+    $(function() {
+        $("#make").change(function () {
+            var makeId = $(this).val();
+            var selector = $("#model-form");
+            if (makeId === "") {
+                selector.hide();
+            } else {
+                var request = "makes/" + makeId + "/models";
+                addElements(request, appendModels);
+            }
+        });
+    });
+
+    function appendModels(models) {
+        $("#model-select").html("<option value=''>- Select model -</option>");
+        models.forEach(function (model) {
+            $("#model-select").append(
+                "<option value=" + model.id + ">" + model.name + "</option>"
+            );
+        });
+        $("#model-form").show();
+    }
+</script>
+
+<body>
+<div class="container">
+    <form method="post" id="addCar" class="needs-validation" action="#" th:action="@{/cars}" th:object="${car}">
+
+        <div class="form-group">
+            <label th:for="make">Car make:</label>
+            <select class="form-control" id="make" required>
+                <option value=""> - Select make - </option>
+            </select>
+        </div>
+
+        <div class="form-group" id="model-form" style="display: none">
+            <label for="model-select">Model:</label>
+            <select class="form-control" id="model-select" th:field="*{modelId}" name="model" required>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="gearbox">Gearbox type:</label>
+            <select class="form-control"  id="gearbox" name="gearboxId" required>
+                <option value=""> - Select gearbox - </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="odometer">Odometer:</label>
+            <input class="form-control" type="number" id="odometer" th:field="*{odometer}" name="odometer" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="color-select">Color:</label>
+            <select class="form-control" id="color-select" name="color" th:field="*{color}" required>
+                <option value="">- Select color -</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <input class="form-control" type="text" id="description" name="desc" th:field="*{desc}"/>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input class="form-control" type="number" id="price" name="price" th:field="*{price}" required/>
+        </div>
+
+        <input type="hidden" name="ownerId" value="1">
+
+        <button type="submit" class="btn btn-outline-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>

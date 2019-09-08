@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Online car store</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+        $(function() {
+            $("#header").load("/header");
+            createTableBody();
+        });
+
+        function createTableBody() {
+            $.ajax({
+                url: "./cars/",
+                type: "GET",
+                dataType: "json",
+                data: {"status" : "for_sale"},
+                success: function(cars) {
+                    generateTableContent(cars);
+                }
+            });
+        }
+
+        function generateTableContent(cars) {
+            for (var i = 0; i < cars.length; i++) {
+                addRow(cars[i], i + 1);
+            }
+        }
+
+        function addRow(car, i) {
+            $("#cars > tbody").append("<tr><td>"
+                + i + "</td><td>"
+                + "<a href='./cars/" + car.id + "/'>"
+                + car.make.name.toUpperCase() + " "
+                + car.model.name + "</a></td><td>"
+                + parseDate(car.postDate) + "</td><td>"
+                + car.price
+                + "</td></tr>"
+            );
+        }
+
+        function parseDate(date) {
+            return new Date(date.year, date.monthValue, date.dayOfMonth, date.hour, date.minute)
+                .toLocaleString();
+        }
+    </script>
+</head>
+<body>
+
+<header id="header" class="navbar navbar-expand-lg navbar-light bg-light"></header>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h3>Car list</h3>
+    </div>
+
+    <div id="table">
+        <table class="table" id="cars">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th scope='col'>Car model</th>
+                <th scope='col'>Post date</th>
+                <th scope='col'>Price</th>
+            </tr>
+            </thead>
+            <tbody th:remove="body">
+            <tr>
+                <td>1</td>
+                <td><a href="cardetails.html">Audi R8</a></td>
+                <td>02.08.2019, 13:00:00</td>
+                <td>50000</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td><a href="cardetails.html">Lamborghini Huracan</a></td>
+                <td>02.08.2019, 14:00:00</td>
+                <td>175000</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td><a href="cardetails.html">Toyota </a></td>
+                <td>02.08.2019, 15:00:00</td>
+                <td>25000</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

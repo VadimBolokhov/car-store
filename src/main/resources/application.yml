@@ -1,1 +1,6 @@
-
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/car_catalog
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver

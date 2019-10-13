@@ -70,10 +70,8 @@ public class CarsController {
 
     @PostMapping("/cars")
     public ResponseEntity<String> addCar(@ModelAttribute PostCarDto dto) {
-        System.out.println("===> received: " + dto);
         var car = new CarAssembler().buildCar(dto);
         this.carRep.save(car);
-        System.out.println("===> saved.");
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 

@@ -81,6 +81,9 @@
 </script>
 
 <body>
+
+<header th:replace="header :: header"></header>
+
 <div class="container">
     <form method="post" id="addCar" class="needs-validation" action="#" th:action="@{/cars}" th:object="${car}">
 
@@ -125,8 +128,6 @@
             <label for="price">Price:</label>
             <input class="form-control" type="number" id="price" name="price" th:field="*{price}" required/>
         </div>
-
-        <input type="hidden" name="ownerId" value="1">
 
         <button type="submit" class="btn btn-outline-primary">Submit</button>
     </form>

@@ -3,16 +3,20 @@ package ru.vbolokhov.carstore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.vbolokhov.carstore.models.Car;
 import ru.vbolokhov.carstore.models.Color;
+import ru.vbolokhov.carstore.models.User;
 import ru.vbolokhov.carstore.repository.CarsRepository;
 import ru.vbolokhov.carstore.repository.GearboxRepository;
 import ru.vbolokhov.carstore.repository.MakesRepository;
 import ru.vbolokhov.carstore.repository.ModelRepository;
 import ru.vbolokhov.carstore.dto.*;
+import ru.vbolokhov.carstore.security.AuthenticationDetails;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,34 +49,35 @@ public class CarsController {
         this.modelRepository = modelRep;
     }
 
-    @GetMapping("/header")
-    public String getHeader() {
-        return "header";
+    @GetMapping({"/", "/index"})
+    public String getMainPage(Model model) {
+        return "index";
     }
 
     @GetMapping("/cars/add")
+    @PreAuthorize(value = "hasRole('ROLE_USER')")
     public String getAddCarPage(Model model) {
         var car = new PostCarDto();
-        //car.setOwnerId();
         model.addAttribute("car", car);
         return "addcar";
     }
 
     @GetMapping("/cars")
-    @ResponseBody
-    public List<GetCarDto> getUnsoldCars() {
+    public String getUnsoldCars(Model model) {
         var cars = this.carRep.findAllBySold(false);
-        var assembler = new CarAssembler();
-        return cars.stream()
-                .map(assembler::writeDTO)
-                .collect(Collectors.toList());
+        model.addAttribute("cars", cars);
+        return "cars::table";
     }
 
     @PostMapping("/cars")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> addCar(@ModelAttribute PostCarDto dto) {
         var car = new CarAssembler().buildCar(dto);
+        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User owner = ((AuthenticationDetails) userDetails).getUser();
+        car.setOwner(owner);
         this.carRep.save(car);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>("index", HttpStatus.CREATED);
     }
 
     @GetMapping("/cars/{carId}/")
@@ -113,5 +118,10 @@ public class CarsController {
         return this.modelRepository.findAllByMakeId(id).stream()
                 .map(assembler::writeModel)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage(Model model) {
+        return "login";
     }
 }

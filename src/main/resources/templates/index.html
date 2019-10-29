@@ -14,49 +14,24 @@
 
     <script>
         $(function() {
-            $("#header").load("/header");
             createTableBody();
         });
 
         function createTableBody() {
             $.ajax({
-                url: "./cars/",
+                url: "./cars",
                 type: "GET",
-                dataType: "json",
                 data: {"status" : "for_sale"},
-                success: function(cars) {
-                    generateTableContent(cars);
+                success: function(data) {
+                    $("#table").html(data);
                 }
             });
-        }
-
-        function generateTableContent(cars) {
-            for (var i = 0; i < cars.length; i++) {
-                addRow(cars[i], i + 1);
-            }
-        }
-
-        function addRow(car, i) {
-            $("#cars > tbody").append("<tr><td>"
-                + i + "</td><td>"
-                + "<a href='./cars/" + car.id + "/'>"
-                + car.make.name.toUpperCase() + " "
-                + car.model.name + "</a></td><td>"
-                + parseDate(car.postDate) + "</td><td>"
-                + car.price
-                + "</td></tr>"
-            );
-        }
-
-        function parseDate(date) {
-            return new Date(date.year, date.monthValue, date.dayOfMonth, date.hour, date.minute)
-                .toLocaleString();
         }
     </script>
 </head>
 <body>
 
-<header id="header" class="navbar navbar-expand-lg navbar-light bg-light"></header>
+<header th:replace="header :: header"></header>
 
 <div class="container">
     <div class="d-flex justify-content-center">

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A user in the DB.
@@ -18,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "login")
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
     @Column(name = "password")
     private String password;
@@ -30,10 +31,7 @@ public class User {
     private String email;
     @Column(name = "reg_date", updatable = false)
     private LocalDateTime registration;
-    @Column(name = "role")
-    @Enumerated(EnumType.ORDINAL)
-    private Role role;
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Car> cars;
 
     public User() {
@@ -89,14 +87,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public List<Car> getCars() {

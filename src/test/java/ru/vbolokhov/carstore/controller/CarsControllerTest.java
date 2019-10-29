@@ -12,6 +12,7 @@ import ru.vbolokhov.carstore.repository.CarsRepository;
 import ru.vbolokhov.carstore.repository.GearboxRepository;
 import ru.vbolokhov.carstore.repository.MakesRepository;
 import ru.vbolokhov.carstore.repository.ModelRepository;
+import ru.vbolokhov.carstore.security.SecurityService;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -46,12 +47,8 @@ public class CarsControllerTest {
     @MockBean
     private ModelRepository modelRep;
 
-    @Test
-    public void whenRequestForHeaderThenShouldReturnHeaderView() throws Exception {
-        this.mvc.perform(get("/header"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("header"));
-    }
+    @MockBean
+    private SecurityService securityService;
 
     @Test
     public void whenRequestForCarMakesThenShouldReturnListOfMakeDTOs() throws Exception {

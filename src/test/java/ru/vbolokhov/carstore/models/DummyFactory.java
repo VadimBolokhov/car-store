@@ -34,7 +34,7 @@ public class DummyFactory {
         User user = new User();
         user.setLogin("login");
         user.setPassword("password");
-        user.setRole(Role.AMDIN);
+        //user.setRole(Role.ADMIN);
         user.setEmail("some@email.com");
         user.setFirstname("Firstname");
         user.setLastname("Lastname");
@@ -50,7 +50,7 @@ public class DummyFactory {
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
-        user.setRole(Role.USER);
+        //user.setRole(Role.USER);
         user.setEmail("some@email.com");
         user.setFirstname("Firstname");
         user.setLastname("Lastname");
